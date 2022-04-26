@@ -14,14 +14,14 @@ public:
 	
 private:
 
-	void export(std::string temp);
+	void exports(std::string temp);
 	std::vector<std::string> words;
-	int totalWord;
+	//int totalWord;
 }
+;
 
 
 
 
 
-
-#endif#pragma once
+#endif MAPPER_H

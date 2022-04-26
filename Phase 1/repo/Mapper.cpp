@@ -12,10 +12,11 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 //constructor
 Mapper::Mapper(int c)
-	:totalWord(c)
+	/* :totalWord(c)*/
 {
 	words;
 }
@@ -24,29 +25,39 @@ void Mapper::map(int key, std::vector<std::string> container, std::string dir)
 {
 	std::string text = container[key];
 	//remove punctuation;
-	text.erase(std::remove_if(text.begin(), text.end(), ::ispunct), text.end());
+	//text.erase(std::remove_if(text.begin(), text.end(), ::ispunct), text.end());
 
-	std::transform(text.begin(), text.end(), text.begin(), std::tolower);
+	//std::transform(text.begin(), text.end(), text.begin(), std::tolower);
 	//std::vector<std::string> words;
 	
-	size_t x = text.find(" ");
-	while (x != std::string::npos) {
-		words.push_back(text.substr(0, x)+",1");
-		totalWord += 1;
-		text = text.substr(x);
-		x = text.find(" ");
+	std::stringstream txtstr(text);
+	std::string intermediate;
+
+	while (getline(txtstr, intermediate, ' '))
+	{
+		intermediate.erase(std::remove_if(intermediate.begin(), intermediate.end(), ::ispunct), intermediate.end());
+
+		std::transform(intermediate.begin(), intermediate.end(), intermediate.begin(), std::tolower);
+		words.push_back(intermediate+",1");
 	}
 
+
 	//export;
-	export(dir);
+	exports(dir);
 }
 
 
-void Mapper::export(std::string dir)
+void Mapper::exports(std::string dir)
 {
-	std::ofstream outputFile(dir+"/temp.txt");
+	std::ofstream out(dir + "/temp.txt");
+	std::streambuf* coutbuf = std::cout.rdbuf();
+	std::cout.rdbuf(out.rdbuf());
+	//std::ofstream outputFile(dir+"/temp.txt");
 	for (auto& itr : words)
-		outputFile << itr << std::endl;
+		std::cout << itr << std::endl;
 	//clear up vector words.
 	words.clear();
+
+	std::cout.rdbuf(coutbuf);
+	std::ofstream myfile;
 }

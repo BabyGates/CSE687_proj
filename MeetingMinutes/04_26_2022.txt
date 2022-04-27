@@ -1,0 +1,11 @@
+issues with github, have stuff saved to forked branches
+Moira - filesystem class with bugs
+shutong - mapper class started
+
+Helpped diagnose and fix some bugs, finihsed writing classes, integrated with my working code. 
+removed mapper member vector of words - this will cause headaches down the road with multithreading
+
+file i/o bug where the stringstream buffer isn't being flushed causing duplicate information to be kept around between filesystem
+thought this was a bug in the trie but determined to be the file manager class
+
+meeting tomorrow to work unit tests

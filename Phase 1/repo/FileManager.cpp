@@ -1,53 +1,41 @@
-//FileManager.cpp
-//implementations of FileManager class
-
-
-
 #include "FileManager.hpp"
-#include <fstream>
-#include <filesystem>
-#include <boost/log/trivial.hpp>
 #include <sstream>
-
-std::vector<std::string> FileManager::fetchLines(std::string input) {
-	std::vector<std::string> linesVector;
-	std::stringstream content;
-	std::string directoryPath = input; //store input directory in directoryPath variable
-
-	for (const auto & entry : std::filesystem::directory_iterator(directoryPath)) { //for each file in the directory
-		std::ifstream file;
-		file.open(entry); //open the file
-		content << file.rdbuf(); //push into content variable
-		linesVector.push_back(content.str()); //push onto the vector
-	}
-
-	return linesVector; //return vector
-}
+#include <fstream>
+#include <boost/log/trivial.hpp>
 
 std::vector<std::string> FileManager::read(std::string directory, int key) {
 	std::vector<std::string> retVect;
-	std::string filePathName = directory;
-	filePathName += "/file";
-	filePathName += std::to_string(key);
-	filePathName += ".txt";
-	std::ifstream file(filePathName);
-	std::string line;
-	while (std::getline(file, line))
-	{
-		retVect.push_back(line);
+	if (key == -1) {
+		// reading the input directory, not temp
+		std::vector<std::string> retVect;
+		for (auto& input : std::filesystem::directory_iterator(directory)) {
+			BOOST_LOG_TRIVIAL(info) << "Ingesting file: " << input.path();
+			std::ifstream file(input.path());
+			std::stringstream str;
+			str << file.rdbuf();
+			retVect.push_back(str.str());
+		}
+		return retVect;
 	}
-	return retVect;
+	else {
+		std::string filePathName = directory;
+		filePathName += "/file";
+		filePathName += std::to_string(key);
+		filePathName += ".txt";
+		std::ifstream file(filePathName);
+		std::string line;
+		while (std::getline(file, line)) {
+			retVect.push_back(line);
+		}
+		return retVect;
+	}
 }
 
-void FileManager::write(std::string directory, int key, std::string content) {
-	std::string filePath = directory; //store desired directory input into path variable
-	filePath += "/file" + std::to_string(key) + ".txt"; //update path with file named based on specific key of file
-
-
-	std::ofstream file; //specifies directory to be opened in
-	file.open(filePath, std::ios_base::app); //open file
-	file << content; //write content into file
-	file.close(); //close file
+void FileManager::write(std::string word, std::string path, int key, int quantity) {
+	std::ofstream outFile;
+	outFile.open(std::string(path + "/file" + std::to_string(key) + ".txt"), std::ios_base::app);
+	outFile << '\"' << word << "\", " << quantity << '\n';
+	outFile.close();
 }
 
 bool FileManager::init(std::string inDir, std::string tempDir, std::string outDir) {

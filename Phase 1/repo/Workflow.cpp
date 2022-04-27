@@ -11,7 +11,7 @@ bool Workflow::run(std::string inDir, std::string tempDir, std::string outDir) {
 	FileManager fileMgr;
 	Mapper mapper;
 	Reducer reducer(outDir);
-	std::vector<std::string> inVect = fileMgr.fetchLines(inDir);
+	std::vector<std::string> inVect = fileMgr.read(inDir);
 	try {
 		for (int i = 0; i < inVect.size(); i++) {
 			// for each file in the inDirectory

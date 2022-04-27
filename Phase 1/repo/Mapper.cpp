@@ -14,7 +14,7 @@
 #include <iostream>
 #include <sstream>
 #include "boost/algorithm/string.hpp"
-#include "fileManager.hpp"
+#include "FileManager.hpp"
 
 //constructor
 Mapper::Mapper(int c)
@@ -55,7 +55,6 @@ void Mapper::exporter(std::vector<std::string> vect, std::string dir, int key)
 		if (itr == "") {
 			continue;
 		}
-		std::string tmp = "\"" + itr + "\", " + "1\n";
-		FileManager::write(dir, key, tmp);
+		FileManager::write(itr, dir, key, 1);
 	}
 }

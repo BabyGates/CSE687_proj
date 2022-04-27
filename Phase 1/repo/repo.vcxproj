@@ -146,7 +146,7 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Mapper.cpp" />
     <ClCompile Include="Reducer.cpp" />
-    <ClCompile Include="Phase1Tests.cpp" />
+    <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Trie.cpp" />
     <ClCompile Include="Workflow.cpp" />
   </ItemGroup>
@@ -154,6 +154,7 @@
     <ClInclude Include="FileManager.hpp" />
     <ClInclude Include="Mapper.hpp" />
     <ClInclude Include="Reducer.hpp" />
+    <ClInclude Include="Tests.hpp" />
     <ClInclude Include="Trie.hpp" />
     <ClInclude Include="Workflow.hpp" />
   </ItemGroup>
@@ -166,7 +167,6 @@
     <Import Project="packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets" Condition="Exists('packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets')" />
     <Import Project="packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets" Condition="Exists('packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets')" />
     <Import Project="packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets" Condition="Exists('packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets')" />
-    <Import Project="packages\boost_unit_test_framework-vc142.1.79.0\build\boost_unit_test_framework-vc142.targets" Condition="Exists('packages\boost_unit_test_framework-vc142.1.79.0\build\boost_unit_test_framework-vc142.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -176,6 +176,5 @@
     <Error Condition="!Exists('packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets'))" />
     <Error Condition="!Exists('packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets'))" />
     <Error Condition="!Exists('packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets'))" />
-    <Error Condition="!Exists('packages\boost_unit_test_framework-vc142.1.79.0\build\boost_unit_test_framework-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_unit_test_framework-vc142.1.79.0\build\boost_unit_test_framework-vc142.targets'))" />
   </Target>
 </Project>

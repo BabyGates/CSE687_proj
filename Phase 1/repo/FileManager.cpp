@@ -1,5 +1,6 @@
 #include "FileManager.hpp"
 #include <sstream>
+#include <string>
 #include <fstream>
 #include <boost/log/trivial.hpp>
 
@@ -22,6 +23,7 @@ std::vector<std::string> FileManager::read(std::string directory, int key) {
 		filePathName += "/file";
 		filePathName += std::to_string(key);
 		filePathName += ".txt";
+		BOOST_LOG_TRIVIAL(info) << "Ingesting file: " << filePathName;
 		std::ifstream file(filePathName);
 		std::string line;
 		while (std::getline(file, line)) {
@@ -31,11 +33,20 @@ std::vector<std::string> FileManager::read(std::string directory, int key) {
 	}
 }
 
-void FileManager::write(std::string word, std::string path, int key, int quantity) {
-	std::ofstream outFile;
-	outFile.open(std::string(path + "/file" + std::to_string(key) + ".txt"), std::ios_base::app);
-	outFile << '\"' << word << "\", " << quantity << '\n';
-	outFile.close();
+void FileManager::write(std::string word, std::string path, int key) {
+	if (key == -1) {
+		// final output file, not temp<key>
+		std::ofstream outFile;
+		outFile.open(std::string(path + "/final_output.txt"), std::ios_base::app);
+		outFile << word;
+		outFile.close();
+	}
+	else {
+		std::ofstream outFile;
+		outFile.open(std::string(path + "/file" + std::to_string(key) + ".txt"), std::ios_base::app);
+		outFile << word;
+		outFile.close();
+	}
 }
 
 bool FileManager::init(std::string inDir, std::string tempDir, std::string outDir) {
@@ -63,10 +74,29 @@ bool FileManager::init(std::string inDir, std::string tempDir, std::string outDi
 
 void FileManager::printFinal(bool pass, std::string dir) {
 	if (pass) {
-		// print success message
+		// print success file
 		std::ofstream output(std::string(dir + "/SUCCESS"));
 	}
 	else {
 		std::ofstream output(std::string(dir + "/FAILURE"));
+	}
+}
+
+bool FileManager::test() {
+	// unit test. writes file to local dir and reads it back
+	try {
+		_mkdir("test");
+		write("\"test\", 1\n", "test", 0);
+		std::vector<std::string> readback = read("test");
+		if (strstr(readback.at(0).c_str(), "test") == nullptr) {
+			std::filesystem::remove_all("test");
+			return false;
+		}
+		std::filesystem::remove_all("test");
+		return true;
+	}
+	catch (...) {
+		std::filesystem::remove_all("test");
+		return false;
 	}
 }

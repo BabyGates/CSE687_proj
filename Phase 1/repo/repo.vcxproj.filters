@@ -33,11 +33,11 @@
     <ClCompile Include="Reducer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Phase1Tests.cpp">
-      <Filter>UnitTests</Filter>
-    </ClCompile>
     <ClCompile Include="Mapper.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests.cpp">
+      <Filter>UnitTests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="Mapper.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests.hpp">
+      <Filter>UnitTests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

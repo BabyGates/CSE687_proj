@@ -31,7 +31,6 @@ void Trie::insert(std::string key)
 // pops off the first word (first leaf) in the trie and deletes it
 std::tuple<std::string, int> Trie::pop() {
     std::string retString;
-
     // return false if Trie is empty
     if (this == nullptr) {
         BOOST_LOG_TRIVIAL(error) << "Trie was not valid";

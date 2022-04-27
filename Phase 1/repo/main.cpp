@@ -1,7 +1,17 @@
 #include "FileManager.hpp"
 #include "Workflow.hpp"
-#include <boost/test/unit_test.hpp>
+#include "Tests.hpp"
+
 int main(int argc, char* argv[]) {
+
+	BOOST_LOG_TRIVIAL(debug) << "Running unit tests...";
+	if (Test::runTests()) {
+		BOOST_LOG_TRIVIAL(debug) << "All unit tests passed!";
+	}
+	else {
+		BOOST_LOG_TRIVIAL(warning) << "One or more unit tests failed!";
+	}
+
 	if (argc != 4) {
 		BOOST_LOG_TRIVIAL(error) << "Malformed arguments! Please run <executable> <input dir> <temp dir> <output dir>";
 		return -1;
@@ -21,6 +31,7 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 	else {
+		BOOST_LOG_TRIVIAL(info) << "Workflow completed successfully!";
 		FileManager::printFinal(true, output);
 	}
 }

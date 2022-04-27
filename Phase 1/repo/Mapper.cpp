@@ -39,7 +39,6 @@ void Mapper::map(int key, std::string container, std::string dir)
 		else {
 			temp.push_back(container[i]);
 		}
-
 	}
 	temp.erase(std::remove_if(temp.begin(), temp.end(), ispunct), temp.end());
 	boost::to_lower(temp);
@@ -50,11 +49,35 @@ void Mapper::map(int key, std::string container, std::string dir)
 
 void Mapper::exporter(std::vector<std::string> vect, std::string dir, int key)
 {
-	std::string file = "temp" + std::to_string(key) + ".txt";
+	std::string outStr;
 	for (auto& itr : vect) {
 		if (itr == "") {
 			continue;
 		}
-		FileManager::write(itr, dir, key, 1);
+		outStr += '\"' + itr + "\", 1\n";
+	}
+	FileManager::write(outStr, dir, key);
+}
+
+bool Mapper::test() {
+	// tests map and export
+	try {
+		std::string testStr = "test string test STRING\nTEST\nSTRING this is a test";
+		_mkdir("test");
+		Mapper m;
+		m.map(0, testStr, "test");
+		std::vector<std::string> outVect = FileManager::read("test", 0);
+		for (auto& line : outVect) {
+			if (strstr(line.c_str(), ", 1") == nullptr || line.at(0) != '\"') {
+				std::filesystem::remove_all("test");
+				return false;
+			}
+		}
+		std::filesystem::remove_all("test");
+		return true;
+	}
+	catch (...) {
+		std::filesystem::remove_all("test");
+		return false;
 	}
 }

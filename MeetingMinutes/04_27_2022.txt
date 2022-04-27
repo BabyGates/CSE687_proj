@@ -1,0 +1,9 @@
+Moira - no status to report
+Shutong - no status to report
+Brannon - wrote unit test class and all unit tests, refactored a lot, sped things way up
+
+
+Went over unit tests and what they are, when/how they're used
+shutong's github mapping was to a cloud drive that ran out of storage. We remapped it and then he could run the project
+
+Advised on the report and how to submit

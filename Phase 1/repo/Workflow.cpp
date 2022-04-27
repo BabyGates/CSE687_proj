@@ -29,6 +29,7 @@ bool Workflow::run(std::string inDir, std::string tempDir, std::string outDir) {
 				return false;
 			}
 			keyCounter++;
+			tempVect.clear();
 		}
 	}
 	catch (std::exception& e) {

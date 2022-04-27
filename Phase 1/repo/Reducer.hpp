@@ -3,8 +3,6 @@
 #pragma once
 
 class Reducer {
-	// exports key and value to a file
-	void write(std::string, std::string, int);
 	std::string mOutDir;
 public:
 	// constructor takes in the out path

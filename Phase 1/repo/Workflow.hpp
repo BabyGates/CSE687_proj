@@ -1,11 +1,8 @@
 #include <string>
 #include <iostream>
-#include <sys/stat.h>
 #include <boost/log/trivial.hpp>
-#include <direct.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <filesystem>
 #include <string>
 
 #include "Trie.hpp"

@@ -10,12 +10,11 @@ class Mapper
 {
 public:
 	explicit Mapper(int count=0);
-	void map(int k, std::vector<std::string> c, std::string dir);
+	void map(int k, std::string c, std::string dir);
 	
 private:
 
-	void exports(std::string temp);
-	std::vector<std::string> words;
+	void exporter(std::vector<std::string> vect, std::string temp, int key);
 	//int totalWord;
 }
 ;

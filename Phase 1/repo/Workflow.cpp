@@ -1,41 +1,40 @@
 #include "Workflow.hpp"
 #include "FileManager.hpp"
 #include "Reducer.hpp"
+#include "Mapper.hpp"
 
 bool Workflow::run(std::string inDir, std::string tempDir, std::string outDir) {
 	BOOST_LOG_TRIVIAL(info) << "Starting workflow.";
 	
 	int keyCounter = 0;
-
+	// setup objects
 	FileManager fileMgr;
-	//Mapper mapper;
-	//std::vector<std::string> inVect = fileMgr.read(inDir);
-
-	//for (int i = 0; i < inVect.size(); i++) {
-	//	// for each file in the inDirectory
-	//	mapper.map(keyCounter, inVect.at(i), tempDir);
-	//	// temp dir had intermediate files in it. now read it back in
-	//	std::vector<std::string> tempVect = fileMgr.read(tempDir, keyCounter);
-	//	std::vector<std::string> sortedVect = sort(tempVect);
-
-	//}
-
-	// testing 4/22
-	// I am assuming there are valid contents in the temp directory. We still need to map from the
-	// input directory to the temp directory
-	std::vector<std::string> tempVect = fileMgr.read(tempDir, keyCounter);
-	Trie* head = sort(tempVect);
-
-	// trie is populated with string values. pump them out to the vector
+	Mapper mapper;
 	Reducer reducer(outDir);
-	if (reducer.reduce(head, outDir, 0)) {
-		BOOST_LOG_TRIVIAL(info) << "SUCCESS";
-		return true;
+	std::vector<std::string> inVect = fileMgr.fetchLines(inDir);
+	try {
+		for (int i = 0; i < inVect.size(); i++) {
+			// for each file in the inDirectory
+			mapper.map(keyCounter, inVect.at(i), tempDir);
+			// temp dir now has intermediate files in it. now read it back in
+			std::vector<std::string> tempVect = fileMgr.read(tempDir, keyCounter);
+			Trie* trieHead = sort(tempVect);
+
+			// trie is populated with string values. pump them out to the vector
+			if (reducer.reduce(trieHead, outDir, keyCounter)) {
+				BOOST_LOG_TRIVIAL(info) << "File: " << keyCounter << " SUCCESS";
+			}
+			else {
+				BOOST_LOG_TRIVIAL(info) << "Something bad happened in the trie. Exiting now.";
+				return false;
+			}
+			keyCounter++;
+		}
 	}
-	else {
-		BOOST_LOG_TRIVIAL(info) << "FAILURE";
-		return false;
+	catch (std::exception& e) {
+		BOOST_LOG_TRIVIAL(info) << "ERROR: " << e.what();
 	}
+	return true;
 }
 
 Trie* Workflow::sort(std::vector<std::string> inVect) {

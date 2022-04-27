@@ -36,6 +36,9 @@
     <ClCompile Include="Phase1Tests.cpp">
       <Filter>UnitTests</Filter>
     </ClCompile>
+    <ClCompile Include="Mapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileManager.hpp">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Reducer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mapper.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

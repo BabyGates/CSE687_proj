@@ -13,51 +13,49 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include "boost/algorithm/string.hpp"
+#include "fileManager.hpp"
 
 //constructor
 Mapper::Mapper(int c)
 	/* :totalWord(c)*/
 {
-	words;
 }
 //map function to split whole text
-void Mapper::map(int key, std::vector<std::string> container, std::string dir)
+void Mapper::map(int key, std::string container, std::string dir)
 {
-	std::string text = container[key];
-	//remove punctuation;
-	//text.erase(std::remove_if(text.begin(), text.end(), ::ispunct), text.end());
+	// the vector to call export on
+	std::vector<std::string> outVect;
+	std::string temp;
+	for (int i = 0; i < container.length(); i++) {
+		if (isspace(container[i])) {
+			// found end of a word. remove any punctuation and push it back
+			temp.erase(std::remove_if(temp.begin(), temp.end(), ispunct), temp.end());
+			// to lower case
+			boost::to_lower(temp);
+			outVect.push_back(temp);
+			temp = "";
+		}
+		else {
+			temp.push_back(container[i]);
+		}
 
-	//std::transform(text.begin(), text.end(), text.begin(), std::tolower);
-	//std::vector<std::string> words;
-	
-	std::stringstream txtstr(text);
-	std::string intermediate;
-
-	while (getline(txtstr, intermediate, ' '))
-	{
-		intermediate.erase(std::remove_if(intermediate.begin(), intermediate.end(), ::ispunct), intermediate.end());
-
-		std::transform(intermediate.begin(), intermediate.end(), intermediate.begin(), std::tolower);
-		words.push_back(intermediate+",1");
 	}
-
-
-	//export;
-	exports(dir);
+	temp.erase(std::remove_if(temp.begin(), temp.end(), ispunct), temp.end());
+	boost::to_lower(temp);
+	outVect.push_back(temp);
+	exporter(outVect, dir, key);
 }
 
 
-void Mapper::exports(std::string dir)
+void Mapper::exporter(std::vector<std::string> vect, std::string dir, int key)
 {
-	std::ofstream out(dir + "/temp.txt");
-	std::streambuf* coutbuf = std::cout.rdbuf();
-	std::cout.rdbuf(out.rdbuf());
-	//std::ofstream outputFile(dir+"/temp.txt");
-	for (auto& itr : words)
-		std::cout << itr << std::endl;
-	//clear up vector words.
-	words.clear();
-
-	std::cout.rdbuf(coutbuf);
-	std::ofstream myfile;
+	std::string file = "temp" + std::to_string(key) + ".txt";
+	for (auto& itr : vect) {
+		if (itr == "") {
+			continue;
+		}
+		std::string tmp = "\"" + itr + "\", " + "1\n";
+		FileManager::write(dir, key, tmp);
+	}
 }

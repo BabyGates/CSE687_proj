@@ -25,7 +25,7 @@ bool Workflow::run(std::string inDir, std::string tempDir, std::string outDir) {
 				// for each file in the inDirectory
 				int threadKey = keyCounter++;
 				mapper.map(threadKey, inVect.at(i), tempDir);
-				BOOST_LOG_TRIVIAL(info) << "Wrote temp File" << threadKey;
+				BOOST_LOG_TRIVIAL(info) << "Wrote temp file" << threadKey;
 				// temp dir now has intermediate files in it. now read it back in
 				std::vector<std::string> tempVect = FileManager::read(tempDir, threadKey);
 				sort(trieHead, tempVect);

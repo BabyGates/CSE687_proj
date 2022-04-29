@@ -1,9 +1,9 @@
 #include "FileManager.hpp"
 #include "Workflow.hpp"
 #include "Tests.hpp"
+#include <boost/log/trivial.hpp>
 
 int main(int argc, char* argv[]) {
-
 	BOOST_LOG_TRIVIAL(debug) << "Running unit tests...";
 	if (Test::runTests()) {
 		BOOST_LOG_TRIVIAL(debug) << "All unit tests passed!";

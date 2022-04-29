@@ -8,13 +8,22 @@ std::vector<std::string> FileManager::read(std::string directory, int key) {
 	std::vector<std::string> retVect;
 	if (key == -1) {
 		// reading the input directory, not temp
-		std::vector<std::string> retVect;
 		for (auto& input : std::filesystem::directory_iterator(directory)) {
 			BOOST_LOG_TRIVIAL(info) << "Ingesting file: " << input.path();
 			std::ifstream file(input.path());
 			std::stringstream str;
 			str << file.rdbuf();
-			retVect.push_back(str.str());
+			std::string dirty = str.str();
+			std::string cleaned;
+			for (int i = 0; i < dirty.size(); i++) {
+				if (dirty.at(i) < 0 || dirty.at(i) > 255) {
+					BOOST_LOG_TRIVIAL(warning) << "Found a dirty character in input file: " << input.path();
+					BOOST_LOG_TRIVIAL(warning) << dirty.at(i) << " < 0 or " << dirty.at(i) << " > 255). Discarding";
+					continue;
+				}
+				cleaned += dirty.at(i);
+			}
+			retVect.push_back(cleaned);
 		}
 		return retVect;
 	}
@@ -56,10 +65,26 @@ bool FileManager::init(std::string inDir, std::string tempDir, std::string outDi
 		BOOST_LOG_TRIVIAL(error) << inDir << " directory does not exist!";
 		return false;
 	}
+	if (std::filesystem::is_empty(inDir.c_str())) {
+		BOOST_LOG_TRIVIAL(error) << inDir << " directory is empty! Nothing to process. Exiting now";
+		return false;
+	}
 	else {
 		// make new directories
-		_mkdir(tempDir.c_str());
-		_mkdir(outDir.c_str());
+		if (_mkdir(tempDir.c_str()) == -1) {
+			if (errno != EEXIST) {
+				// only allowable error is if the dir already exists
+				BOOST_LOG_TRIVIAL(error) << "Failed to make temp dir: \"" << tempDir.c_str() << "\" Exiting now!";
+				return false;
+			}
+		}
+		if (_mkdir(outDir.c_str()) == -1) {
+			if (errno != EEXIST) {
+				// only allowable error is if the dir already exists
+				BOOST_LOG_TRIVIAL(error) << "Failed to make output dir: \"" << outDir.c_str() << "\" Exiting now!";
+				return false;
+			}
+		}
 		// clean them in case they already exist
 		for (const auto& entry : std::filesystem::directory_iterator(tempDir)) {
 			std::filesystem::remove_all(entry.path());

@@ -21,32 +21,32 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{a44f4955-a4c2-4849-9a57-878737e02998}</ProjectGuid>
-    <RootNamespace>repo</RootNamespace>
+    <ProjectGuid>{1063ac8a-8c92-4e48-92e7-6265bb9f55c8}</ProjectGuid>
+    <RootNamespace>MapperDLL</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -86,13 +86,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;MAPPERDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -101,29 +101,37 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;MAPPERDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;MAPPERDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <TargetMachine>MachineX64</TargetMachine>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)dlls\$(ProjectName).dll"</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>if not exist "$(SolutionDir)dlls" mkdir "$(SolutionDir)dlls"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -131,50 +139,43 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;MAPPERDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="FileManager.cpp" />
-    <ClCompile Include="Mapper.cpp" />
-    <ClCompile Include="Reducer.cpp" />
-    <ClCompile Include="Tests.cpp" />
-    <ClCompile Include="Trie.cpp" />
-    <ClCompile Include="Workflow.cpp" />
+    <ClInclude Include="..\repo\FileManager.hpp" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="Mapper.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileManager.hpp" />
-    <ClInclude Include="Mapper.hpp" />
-    <ClInclude Include="Reducer.hpp" />
-    <ClInclude Include="Tests.hpp" />
-    <ClInclude Include="Trie.hpp" />
-    <ClInclude Include="Workflow.hpp" />
+    <ClCompile Include="..\repo\FileManager.cpp" />
+    <ClCompile Include="Mapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\boost.1.79.0\build\boost.targets" Condition="Exists('packages\boost.1.79.0\build\boost.targets')" />
-    <Import Project="packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets" Condition="Exists('packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets')" />
-    <Import Project="packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets" Condition="Exists('packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets')" />
-    <Import Project="packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets" Condition="Exists('packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets')" />
+    <Import Project="..\repo\packages\boost.1.79.0\build\boost.targets" Condition="Exists('..\repo\packages\boost.1.79.0\build\boost.targets')" />
+    <Import Project="..\repo\packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets" Condition="Exists('..\repo\packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets')" />
+    <Import Project="..\repo\packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets" Condition="Exists('..\repo\packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets')" />
+    <Import Project="..\repo\packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets" Condition="Exists('..\repo\packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\boost.1.79.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost.1.79.0\build\boost.targets'))" />
-    <Error Condition="!Exists('packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets'))" />
-    <Error Condition="!Exists('packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets'))" />
-    <Error Condition="!Exists('packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets'))" />
+    <Error Condition="!Exists('..\repo\packages\boost.1.79.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\repo\packages\boost.1.79.0\build\boost.targets'))" />
+    <Error Condition="!Exists('..\repo\packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\repo\packages\boost_log-vc142.1.79.0\build\boost_log-vc142.targets'))" />
+    <Error Condition="!Exists('..\repo\packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\repo\packages\boost_filesystem-vc142.1.79.0\build\boost_filesystem-vc142.targets'))" />
+    <Error Condition="!Exists('..\repo\packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\repo\packages\boost_thread-vc142.1.79.0\build\boost_thread-vc142.targets'))" />
   </Target>
 </Project>

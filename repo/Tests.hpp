@@ -7,5 +7,5 @@
 class Test {
 	template <class T> static bool test(T actual, T expected, std::string testName);
 public:
-	static bool runTests();
+	static bool runTests(std::string);
 };

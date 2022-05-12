@@ -1,10 +1,11 @@
 #include <string>
 #include <iostream>
 #include <boost/log/trivial.hpp>
+#include "boost/algorithm/string.hpp"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
-
+#include <Windows.h>
 #include "Trie.hpp"
 
 #pragma once
@@ -16,6 +17,6 @@ class Workflow {
 public:
 	// params: input dir, temp dir, output dir
 	// returns: pass/fail bool
-	bool run(std::string, std::string, std::string);
-	static bool test();
+	bool run(std::string, std::string, std::string, std::string);
+	static bool test(std::string);
 };

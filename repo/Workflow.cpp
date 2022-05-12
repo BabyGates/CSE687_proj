@@ -3,28 +3,58 @@
 #include <mutex>
 #include "Workflow.hpp"
 #include "FileManager.hpp"
-#include "Reducer.hpp"
 #include "Mapper.hpp"
 
 std::atomic<int> keyCounter;
 std::mutex mutex;
+typedef void (*funcMap)(int, std::string, std::string);
+typedef bool (*funcReduce)(Trie*, std::string);
 
-bool Workflow::run(std::string inDir, std::string tempDir, std::string outDir) {
+bool Workflow::run(std::string inDir, std::string tempDir, std::string outDir, std::string dllDir) {
+	// load in dll's
+	// mapper dll ------------------
+	funcMap map;
+	{
+		HINSTANCE hDLL;
+		std::string dllPath = dllDir + "\\MapperDLL";
+		std::wstring wideStr = std::wstring(dllPath.begin(), dllPath.end());
+		const wchar_t* libName = wideStr.c_str();
+		hDLL = LoadLibraryEx(libName, NULL, NULL);   // Handle to DLL
+		if (hDLL == NULL) {
+			BOOST_LOG_TRIVIAL(error) << "Failed to load Map DLL!";
+			return false;
+		}
+		map = (funcMap)GetProcAddress(hDLL, "map");
+	}
+	//
+	// reducer dll -----------------
+	//
+	funcReduce reduce;
+	{
+		HINSTANCE hDLL;
+		std::string dllPath = dllDir + "\\ReducerDLL";
+		std::wstring wideStr = std::wstring(dllPath.begin(), dllPath.end());
+		const wchar_t* libName = wideStr.c_str();
+		hDLL = LoadLibraryEx(libName, NULL, NULL);   // Handle to DLL
+		if (hDLL == NULL) {
+			BOOST_LOG_TRIVIAL(error) << "Failed to load Reducer DLL!";
+			return false;
+		}
+		reduce = (funcReduce)GetProcAddress(hDLL, "reduce");
+	}
+	//
 	BOOST_LOG_TRIVIAL(info) << "Starting workflow.";
 	std::vector<std::string> inVect = FileManager::read(inDir);
 	std::vector<std::thread> threadVect;
 	keyCounter = 0;
 	static Trie* trieHead = new Trie();
-	Reducer reducer(outDir);
 	auto start = std::chrono::high_resolution_clock::now();
 	try {
 		for (int i = 0; i < inVect.size(); i++) {
 			threadVect.emplace_back([=] {	
-				// setup objects
-				Mapper mapper;
 				// for each file in the inDirectory
 				int threadKey = keyCounter++;
-				mapper.map(threadKey, inVect.at(i), tempDir);
+				map(threadKey, inVect.at(i), tempDir);
 				BOOST_LOG_TRIVIAL(info) << "Wrote temp file" << threadKey;
 				// temp dir now has intermediate files in it. now read it back in
 				std::vector<std::string> tempVect = FileManager::read(tempDir, threadKey);
@@ -35,7 +65,7 @@ bool Workflow::run(std::string inDir, std::string tempDir, std::string outDir) {
 			thread.join();
 		}
 		// trie is populated with string values. pump them out to the vector
-		if (reducer.reduce(trieHead)) {
+		if (reduce(trieHead, outDir)) {
 			BOOST_LOG_TRIVIAL(info) << "All files completed successfully!";
 		}
 		else {
@@ -79,12 +109,28 @@ void Workflow::sort(Trie* head, std::vector<std::string> inVect) {
 	}
 }
 
-bool Workflow::test() {
+bool Workflow::test(std::string dllDir) {
+	//
+	// reducer dll -----------------
+	//
+	funcReduce reduce;
+	{
+		HINSTANCE hDLL;
+		std::string dllPath = dllDir + "\\ReducerDLL";
+		std::wstring wideStr = std::wstring(dllPath.begin(), dllPath.end());
+		const wchar_t* libName = wideStr.c_str();
+		hDLL = LoadLibraryEx(libName, NULL, NULL);   // Handle to DLL
+		if (hDLL == NULL) {
+			BOOST_LOG_TRIVIAL(error) << "Failed to load Reducer DLL!";
+			return false;
+		}
+		reduce = (funcReduce)GetProcAddress(hDLL, "reduce");
+	}
+	//
 	// tests sort, reduce, trie
 	bool retVal = false;
 	_mkdir("test");
 	Workflow wf;
-	Reducer reducer("test");
 	std::vector<std::string> tempVect;
 	tempVect.push_back("\"test\", 1");
 	tempVect.push_back("\"other\", 1");
@@ -98,7 +144,7 @@ bool Workflow::test() {
 		retVal = false;
 		goto clean_up;
 	}
-	if (reducer.reduce(trieHead)) {
+	if (reduce(trieHead, "test")) {
 		retVal = true;
 	}
 	else {

@@ -58,9 +58,18 @@ void FileManager::write(std::string word, std::string path, int key) {
 	}
 }
 
-bool FileManager::init(std::string inDir, std::string tempDir, std::string outDir) {
+bool FileManager::init(std::string inDir, std::string tempDir, std::string outDir, std::string dllDir) {
 	// check if input is a valid directory
 	struct stat buffer;
+	if (stat(dllDir.c_str(), &buffer) != 0) {
+		BOOST_LOG_TRIVIAL(error) << dllDir << " directory does not exist!";
+		return false;
+	}
+	if (std::filesystem::is_empty(dllDir.c_str())) {
+		BOOST_LOG_TRIVIAL(error) << dllDir << " directory is empty! Nothing to process. Exiting now";
+		return false;
+	}
+	// check if input is a valid directory
 	if (stat(inDir.c_str(), &buffer) != 0) {
 		BOOST_LOG_TRIVIAL(error) << inDir << " directory does not exist!";
 		return false;

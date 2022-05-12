@@ -1,6 +1,9 @@
 .vs/
-Phase 1/repo/.vs/
-Phase 1/repo/Debug/
-Phase 1/repo/x64/
-Phase 1/repo/output/
-Phase 1/repo/temp/
+repo/.vs/
+repo/dlls
+repo/output
+repo/temp
+repo/x64
+Phase 2
+MapperDLL/x64
+ReducerDLL/x64

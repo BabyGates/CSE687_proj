@@ -8,6 +8,7 @@ There has been a code restructuring since last phase! Due to large file sizes, g
 There is a docs folder with contains the deprecated meeting minutes folder and rubrics for each phase.
 
 Steps to run:
+0. The master solution file is repo/repo.sln The external MapperDLL and ReducerDLL folders will be linked automatically.
 1. After compiling, navigate to the build's output directory (repo/x64/Debug)
     -For phase 2, the output DLL's are built out to "repo/dlls" 
 2. Open a powershell or cmd instance in this directory. This can be done with shift+right-click and "open Powershell here"

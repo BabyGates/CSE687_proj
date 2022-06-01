@@ -1,11 +1,10 @@
 CSE687_proj
 
-Phase 2 README
+Phase 3 README
+
+No code changes for this phase. All phase 3 requirements have been implemented since phase 1. No new functionality.
 
 This repo does not come with a pre-compiled executable. Please download and compile the project.
-
-There has been a code restructuring since last phase! Due to large file sizes, gone are the Phase 1-4 folders. All code will be kept at the top-level repo/ with rolling phases.
-There is a docs folder with contains the deprecated meeting minutes folder and rubrics for each phase.
 
 Steps to run:
 

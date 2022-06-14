@@ -10,4 +10,5 @@
 #define REDUCERDLL_API __declspec(dllimport)
 #endif
 
-extern "C" REDUCERDLL_API bool reduce(Trie*, std::string);
+extern "C" REDUCERDLL_API bool reduce();
+extern "C" REDUCERDLL_API void heartbeat(int port);

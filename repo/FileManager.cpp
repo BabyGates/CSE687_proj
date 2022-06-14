@@ -3,6 +3,18 @@
 #include <string>
 #include <fstream>
 #include <boost/log/trivial.hpp>
+#include <iostream>
+
+std::mutex mtx;
+
+std::vector<std::string> FileManager::readFileNames(std::string directory) {
+	std::vector<std::string> retVect;
+	for (auto& input : std::filesystem::directory_iterator(directory)) {
+		BOOST_LOG_TRIVIAL(info) << "Found input file: " << input.path().u8string();
+		retVect.push_back(input.path().u8string());
+	}
+	return retVect;
+}
 
 std::vector<std::string> FileManager::read(std::string directory, int key) {
 	std::vector<std::string> retVect;
@@ -43,6 +55,8 @@ std::vector<std::string> FileManager::read(std::string directory, int key) {
 }
 
 void FileManager::write(std::string word, std::string path, int key) {
+	// mutex lock on writes to be thread safe when writing to the same key
+	mtx.lock();
 	if (key == -1) {
 		// final output file, not temp<key>
 		std::ofstream outFile;
@@ -56,6 +70,7 @@ void FileManager::write(std::string word, std::string path, int key) {
 		outFile << word;
 		outFile.close();
 	}
+	mtx.unlock();
 }
 
 bool FileManager::init(std::string inDir, std::string tempDir, std::string outDir, std::string dllDir) {

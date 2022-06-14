@@ -33,6 +33,12 @@
     <ClCompile Include="Tests.cpp">
       <Filter>UnitTests</Filter>
     </ClCompile>
+    <ClCompile Include="Stub.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinsockClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileManager.hpp">
@@ -46,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="Tests.hpp">
       <Filter>UnitTests</Filter>
+    </ClInclude>
+    <ClInclude Include="Stub.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,11 @@
+#ifndef  _WINSOCKAPI_
+#define _WINSOCKAPI_
+#endif // ! _WINSOCKAPI_
+
+#define CONTROLLER_LISTENING_PORT 10000
+#define REDUCER_STUB_PORT 10001
+#define BASE_STUB_PORT 10002
+
 #include <string>
 #include <iostream>
 #include <boost/log/trivial.hpp>
@@ -19,4 +27,5 @@ public:
 	// returns: pass/fail bool
 	bool run(std::string, std::string, std::string, std::string);
 	static bool test(std::string);
+	void statusListener();
 };

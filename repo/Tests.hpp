@@ -1,6 +1,6 @@
 #include "Workflow.hpp"
 #include "FileManager.hpp"
-#include "Mapper.hpp"
+#include "../MapperDLL/Mapper.hpp"
 
 #pragma once
 

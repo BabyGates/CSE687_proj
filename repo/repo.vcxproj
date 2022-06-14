@@ -147,12 +147,15 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="Stub.cpp" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Trie.cpp" />
+    <ClCompile Include="WinsockClient.cpp" />
     <ClCompile Include="Workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileManager.hpp" />
+    <ClInclude Include="Stub.hpp" />
     <ClInclude Include="Tests.hpp" />
     <ClInclude Include="Trie.hpp" />
     <ClInclude Include="Workflow.hpp" />
